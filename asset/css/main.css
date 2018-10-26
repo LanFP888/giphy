@@ -1,3 +1,39 @@
 .gifResult:hover {
   cursor: pointer;
 }
+
+.fa-star:hover{
+  cursor: pointer;
+  color: yellowgreen
+}
+
+.fa-star{
+  font-size: 2rem;
+  margin: 0.5rem;
+}
+
+.gif-section{
+  margin: 1rem;
+}
+
+.buttons-view{
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.gifTopic{
+  margin: 0.3rem;
+  border: 0
+}
+
+#Trending{
+  background-color: red
+}
+
+.downloadGif{
+  margin: 0.5rem;
+}
+
+.fa-download{
+  margin-right: 0.5rem;
+}
