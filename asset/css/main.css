@@ -12,6 +12,25 @@
   margin: 0.5rem;
 }
 
+.card-header{
+  background-color: #007bff;
+  padding: 0;
+  text-align: center;
+}
+
+#accordion{
+  margin-bottom: 1rem;
+}
+
+.favDivBtn{
+  background-color: #007bff;
+  border: none;
+}
+
+.favDivBtn:focus{
+  box-shadow: none
+}
+
 .gif-section{
   margin: 1rem;
 }
@@ -30,7 +49,8 @@
   background-color: red
 }
 
-.downloadGif{
+.downloadGif,
+.removeFavBtn{
   margin: 0.5rem;
 }
 
