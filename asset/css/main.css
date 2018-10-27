@@ -1,11 +1,3 @@
-.gifResult:hover {
-  cursor: pointer;
-}
-
-.fa-star:hover{
-  cursor: pointer;
-  color: yellowgreen
-}
 
 .fa-star{
   font-size: 2rem;
@@ -56,4 +48,16 @@
 
 .fa-download{
   margin-right: 0.5rem;
+}
+
+/* using media query to fix issue where hover is not working properly on mobile devices, hover effects only apply when using desktop */
+@media only screen and (min-width: 1367px) {
+  .fa-star:hover{
+    cursor: pointer;
+    color: yellowgreen
+  }
+
+  .gifResult:hover {
+  cursor: pointer;
+}
 }
