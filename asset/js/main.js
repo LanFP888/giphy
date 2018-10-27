@@ -95,7 +95,7 @@ function addFavGiftoDiv() {
 
 function getGifbyID(gifID) {
   //if we search using the ID, the response returns an object
-  queryURL = "http://api.giphy.com/v1/gifs/" + gifID + "?api_key=kGOO42dDHjBstMYP3bEXkTG3g9nUihvo"
+  queryURL = "https://api.giphy.com/v1/gifs/" + gifID + "?api_key=kGOO42dDHjBstMYP3bEXkTG3g9nUihvo"
   //ajax call using the queryURL
   $.ajax({
     method: "GET",
