@@ -2,9 +2,13 @@
 // global var
 var gifList = ["Trending", "the office", "motivation", "the it crowd", "laugh"];
 var gifLimitPerCall = 10;
-var gifFavList = [];
+var gifFavList;
+var queryURL;
 
 $(document).ready(function () {
+  //loads the favlist from local storage, make sure this is first step because there are other functions that depends on the data of this list
+  getFav()
+
   // Calling the renderButtons function to display the intial buttons
   renderButtons(gifList);
 
@@ -26,6 +30,9 @@ $(document).ready(function () {
       $(".topic-input").val("")
     }
   });
+
+  //stores the fav Gifs
+  $(document).on("click", ".saveFav", toggleFav);
 
   // Generic function for displaying the movieInfo
   $(document).on("click", ".gifTopic", displayGifInfo);
@@ -54,7 +61,6 @@ function playGif() {
 
 //function for calling the GIPHY API to get the appropriate gifs based on the gifTopic
 function getGif(gifTopic) {
-  var queryURL;
   if (gifTopic !== "Trending") {
     //create the queryURL using the gifTopic
     queryURL =
@@ -66,6 +72,19 @@ function getGif(gifTopic) {
     queryURL =
       "https://api.giphy.com/v1/gifs/trending?api_key=kGOO42dDHjBstMYP3bEXkTG3g9nUihvo"
   }
+  //ajax call using the queryURL
+  $.ajax({
+    method: "GET",
+    url: queryURL
+  }).then(function (response) {
+    console.log(response);
+    makeGifHTML(response.data);
+    refreshFavStatus()
+  });
+}
+
+function getGifbyID(gifID) {
+  queryURL = "http://api.giphy.com/v1/gifs/" + gifID + "?api_key=YOUR_API_KEY"
   //ajax call using the queryURL
   $.ajax({
     method: "GET",
@@ -93,7 +112,11 @@ function makeGifHTML(responseArr) {
     gifPreview.attr("data-gif", responseArr[i].images.fixed_width.url);
     gifPreview.attr("src", responseArr[i].images.fixed_width_still.url);
     var fav = $("<i>")
-    fav.addClass("fas fa-star col-12")
+    fav.addClass("fas fa-star col-12 saveFav")
+    fav.attr("data-gif-id", responseArr[i].id)
+    if (checkFavStatus(responseArr[i].id)) {
+      fav.css("color", "yellowgreen")
+    }
     var downloadBtn = $("<a>")
     // downloadBtn.attr("type", "button")
     downloadBtn.addClass("btn btn-info col-12 downloadGif")
@@ -125,4 +148,72 @@ function renderButtons(arr) {
   }
 }
 
+function checkFavStatus(gifID) {
+  //checks the newly generated gif id with the fav list, if id is in the list, fill in the star indicating it is faved
+  if (gifFavList.indexOf(gifID) !== -1) {
+    return true
+  }
+}
+
+function refreshFavStatus() {
+  $('.saveFav').each(function (index, element) {
+    var gifID = $(element).attr("data-gif-id")
+    if (gifFavList.indexOf(gifID) !== -1) {
+      //if the id exists in the fav array
+      $(element).css("color", "yellowgreen")
+    } else {
+      //if the id doesn't exist in the fav array, remove the color of the star
+      $(element).css("color", "")
+    }
+  })
+}
+
+function toggleFav() {
+  var gifID = $(this).attr("data-gif-id")
+  //store the value if the fav List doesn't already contain the id
+  if (gifFavList.indexOf(gifID) === -1) {
+    //add color to the star
+    $(this).css("color", "yellowgreen")
+    //store the id in local storage
+    storeFav(gifID)
+  } else {
+    //remove color from star
+    $(this).css("color", "")
+    //remove the id in local storage
+    removeFav(gifID)
+  }
+  refreshFavStatus()
+}
+
+function getFav() {
+  //clears the fav list variable
+  gifFavList = []
+  //use JSON.parse to get the favGif value back as an array
+  var storageList = JSON.parse(localStorage.getItem('favGif'))
+  //make sure the favGif exists in local storage, usually it will not if user first uses the site
+  if (storageList !== null) {
+    //assign the value back to gifFavList for this session
+    gifFavList = storageList.slice()
+  }
+}
+
+function removeFav(fav) {
+  //removes the id element from the array
+  gifFavList.splice(gifFavList.indexOf(fav), 1);
+  //store the fav list into the long term local storage
+  setStorage(gifFavList)
+}
+
+function storeFav(fav) {
+  //stores the fav in the fav list
+  gifFavList.push(fav)
+  //store the fav list into the long term local storage
+  setStorage(gifFavList)
+}
+
+function setStorage(arr) {
+  //turn the array into JSON to store it as an array in the key localStorage key value pair
+  json_data = JSON.stringify(arr)
+  localStorage.setItem('favGif', json_data);
+}
 
